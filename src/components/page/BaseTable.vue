@@ -181,12 +181,12 @@ export default {
                 console.log(this.sportworkXList);
                 
                 for(var i = 0; i < res.results.length; i++){
-                    this.sportworkYList[i] = res.results[i].sportworkx;
+                    this.sportworkYList[i] = res.results[i].sportworky;
                 };
                 console.log(this.sportworkYList);
                 
                 for(var i = 0; i < res.results.length; i++){
-                    this.sportworkZList[i] = res.results[i].sportworkx;
+                    this.sportworkZList[i] = res.results[i].sportworkz;
                 };
                 console.log(this.sportworkZList);
                 //引入echarts
@@ -202,7 +202,7 @@ export default {
                         trigger: 'axis'
                     },
                     legend: {
-                        data: ['X方向位移','Y方向位移','Z方向位移']
+                        data: ['功X','功Y','功Z']
                     },
                     grid: {
                         left: '3%',
@@ -225,21 +225,21 @@ export default {
                     },
                     series: [
                         {
-                            name: 'X方向位移',
+                            name: '功X',
                             type: 'line',
                             smooth: true,
                             stack: '总量',
                             data: this.sportworkXList
                         },
                         {
-                            name: 'Y方向位移',
+                            name: '功Y',
                             type: 'line',
                             smooth: true,
                             stack: '总量',
                             data: this.sportworkYList
                         },
                         {
-                            name: 'Z方向位移',
+                            name: '功Z',
                             type: 'line',
                             smooth: true,
                             stack: '总量',
