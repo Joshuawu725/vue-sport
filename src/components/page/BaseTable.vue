@@ -7,36 +7,42 @@
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+        <!-- 折线图区 -->
         <div class="container">
             <div class="handle-box">
-                <el-button
+                <!-- 头部位置 根据需求以后加 -->
+                <!-- <el-button
                     type="primary"
                     icon="el-icon-delete"
                     class="handle-del mr10"
                     @click="delAllSelection"
-                >批量删除</el-button>
-                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">
+                >批量删除</el-button> -->
+                <!-- <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">
                     <el-option key="1" label="广东省" value="广东省"></el-option>
                     <el-option key="2" label="湖南省" value="湖南省"></el-option>
-                </el-select>
-                <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                </el-select> -->
+                <!-- <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button> -->
             </div>
             <el-table
-                :data="tableData"
+                :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
                 border
+                stripe
                 class="table"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="用户名"></el-table-column>
-                <el-table-column label="账户余额">
-                    <template slot-scope="scope">￥{{scope.row.money}}</template>
+                <el-table-column type="selection" align="center"></el-table-column>
+                <el-table-column prop="id" label="ID" align="center"></el-table-column>
+                <el-table-column prop="athlete" label="运动员" align="center"></el-table-column>
+                <el-table-column prop="action" label="击球动作" align="center"></el-table-column>
+                <el-table-column prop="mark" label="测试序号" align="center"></el-table-column>
+                <el-table-column prop="testid" label="测试ID" align="center"></el-table-column>
+                <el-table-column prop="testdate" label="测试时间" align="center">
+                    <!-- <template slot-scope="scope">￥{{scope.row.money}}</template> -->
                 </el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
+                <!-- <el-table-column label="头像(查看大图)" align="center">
                     <template slot-scope="scope">
                         <el-image
                             class="table-td-thumb"
@@ -44,18 +50,21 @@
                             :preview-src-list="[scope.row.thumb]"
                         ></el-image>
                     </template>
-                </el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="状态" align="center">
+                </el-table-column> -->
+                <!-- <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
                         <el-tag
                             :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
                         >{{scope.row.state}}</el-tag>
                     </template>
-                </el-table-column>
-
-                <el-table-column prop="date" label="注册时间"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                </el-table-column> -->
+                <el-table-column prop="speedx" label="线速度X"></el-table-column>
+                <el-table-column prop="speedy" label="线速度Y"></el-table-column>
+                <el-table-column prop="speedz" label="线速度Z"></el-table-column>
+                <el-table-column prop="displacementx" label="位移x"></el-table-column>
+                <el-table-column prop="displacementy" label="位移Y"></el-table-column>
+                <el-table-column prop="displacementz" label="位移Z"></el-table-column>
+                <!-- <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
@@ -69,20 +78,25 @@
                             @click="handleDelete(scope.$index, scope.row)"
                         >删除</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
+            <!-- 分页位置 -->
             <div class="pagination">
                 <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[15, 30, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
                     :total="pageTotal"
-                    @current-change="handlePageChange"
+                    background
                 ></el-pagination>
             </div>
         </div>
-
+        <div class="container">
+            <div id="echart_test" style=" width:100%; height:400px; align: center "></div>
+        </div>
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
@@ -103,36 +117,136 @@
 
 <script>
 import { fetchData } from '../../api/index';
+import { fetchALLData } from '../../api/index';
+import echarts from 'echarts';
 export default {
     name: 'basetable',
     data() {
         return {
-            query: {
-                address: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
-            },
+            // 总条数，根据接口获取数据长度
+            pageTotal: 1,
+            // 默认每页显示的条数（可修改）
+            pageSize:15,
+            // 默认显示第几页
+            currentPage: 1,
+            // // 总数据
             tableData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
-            pageTotal: 0,
             form: {},
             idx: -1,
-            id: -1
+            id: -1,
+            //绘图数据
+            testdateList:[],
+            sportworkXList:[],
+            sportworkYList:[],
+            sportworkZList:[],
+
         };
     },
     created() {
         this.getData();
     },
+    mounted(){
+        this.darwChart();
+    },
     methods: {
-        // 获取 easy-mock 的模拟数据
+        //异步通过axios获取数据
         getData() {
+            fetchALLData(this.query).then(res => {
+                console.log(res);
+                // this.pageTotal = res.pageTotal || 50;
+                this.tableData = res.results;
+                this.pageTotal = res.count;
+                // this.page = this.query.page;
+                // this.size = this.query.size;
+                //console.log(this.tableData);
+
+            });
+        },
+        //echart画图
+        darwChart(){
+            //异步取数
             fetchData(this.query).then(res => {
                 console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
+                for(var i = 0; i < res.results.length; i++){
+                    this.testdateList[i] = res.results[i].testdate;
+                };
+                console.log(this.testdateList);
+                
+                for(var i = 0; i < res.results.length; i++){
+                    this.sportworkXList[i] = res.results[i].sportworkx;
+                };
+                console.log(this.sportworkXList);
+                
+                for(var i = 0; i < res.results.length; i++){
+                    this.sportworkYList[i] = res.results[i].sportworkx;
+                };
+                console.log(this.sportworkYList);
+                
+                for(var i = 0; i < res.results.length; i++){
+                    this.sportworkZList[i] = res.results[i].sportworkx;
+                };
+                console.log(this.sportworkZList);
+                //引入echarts
+                let echarts = require('echarts');
+                // 基于准备好的dom，初始化echarts实例
+                let myChart = echarts.init(document.getElementById('echart_test'));
+                // 指定图表的配置项和数据
+                myChart.setOption({
+                    title: {
+                        text: '异步折线图堆叠'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['X方向位移','Y方向位移','Z方向位移']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: this.testdateList
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'X方向位移',
+                            type: 'line',
+                            smooth: true,
+                            stack: '总量',
+                            data: this.sportworkXList
+                        },
+                        {
+                            name: 'Y方向位移',
+                            type: 'line',
+                            smooth: true,
+                            stack: '总量',
+                            data: this.sportworkYList
+                        },
+                        {
+                            name: 'Z方向位移',
+                            type: 'line',
+                            smooth: true,
+                            stack: '总量',
+                            data: this.sportworkZList
+                        }
+                    ]
+                });
             });
         },
         // 触发搜索按钮
@@ -178,11 +292,31 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
+        // 分页
         // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
-        }
+        handleCurrentChange(val) {
+            
+            this.currentPage = val;
+            
+        },
+          // 每页显示的条数
+        handleSizeChange(val) {
+            this.pageSize = val ;
+            
+        },
+        // //数据总条数
+        //  totalPageNum(){
+        //          fetchData(this.query).then(res=>{
+        //             this.pageTotal =res.results[0].count;//总信息条数从数据库获取;
+        //         }).catch(error=>{
+        //             console.log(error);
+        //         })
+        //     },
+        // handleCurrentChange(val) {
+        //     this.currentPage = query.page;
+        //     console.log(`当前页: ${currentPage}`);
+        // },
+        // handlePageChange(){}
     }
 };
 </script>
