@@ -11,18 +11,32 @@
         <div class="container">
             <div class="handle-box">
                 <!-- 头部位置 根据需求以后加 -->
-                <!-- <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
-                >批量删除</el-button> -->
-                <!-- <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">
-                    <el-option key="1" label="广东省" value="广东省"></el-option>
-                    <el-option key="2" label="湖南省" value="湖南省"></el-option>
-                </el-select> -->
-                <!-- <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button> -->
+                <!-- 运动员选择器 单选 -->
+                <el-select v-model="value" clearable placeholder="请选择">
+                    <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select>
+                <!-- 动作选择器 -->
+                <el-select v-model="value" clearable placeholder="请选择">
+                    <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    </el-option>
+                </el-select>
+                <!-- 时间日期选择器 -->
+                <el-date-picker
+                    v-model="value1"
+                    type="datetimerange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期">
+                </el-date-picker>
             </div>
             <el-table
                 :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
@@ -98,7 +112,7 @@
             <div id="echart_test" style=" width:100%; height:400px; align: center "></div>
         </div>
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+        <!-- <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="用户名">
                     <el-input v-model="form.name"></el-input>
@@ -111,7 +125,7 @@
                 <el-button @click="editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 
@@ -142,7 +156,27 @@ export default {
             sportworkXList:[],
             sportworkYList:[],
             sportworkZList:[],
-
+            //运动员选择器
+            options: [{
+                value: '选项1',
+                label: '黄金糕'
+                }, 
+                {
+                value: '选项2',
+                label: '双皮奶'
+                }, 
+                {
+                value: '选项3',
+                label: '蚵仔煎'
+                }, 
+                {
+                value: '选项4',
+                label: '龙须面'
+                }, 
+                {
+                value: '选项5',
+                label: '北京烤鸭'
+                }],
         };
     },
     created() {
@@ -280,18 +314,18 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editVisible = true;
-        },
-        // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
+        // // 编辑操作
+        // handleEdit(index, row) {
+        //     this.idx = index;
+        //     this.form = row;
+        //     this.editVisible = true;
+        // },
+        // // 保存编辑
+        // saveEdit() {
+        //     this.editVisible = false;
+        //     this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+        //     this.$set(this.tableData, this.idx, this.form);
+        // },
         // 分页
         // 分页导航
         handleCurrentChange(val) {
