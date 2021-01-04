@@ -12,31 +12,41 @@
             <div class="handle-box">
                 <!-- 头部位置 根据需求以后加 -->
                 <!-- 运动员选择器 单选 -->
-                <el-select v-model="value" clearable placeholder="请选择">
-                    <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-                <!-- 动作选择器 -->
-                <el-select v-model="value" clearable placeholder="请选择">
-                    <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-                <!-- 时间日期选择器 -->
-                <el-date-picker
-                    v-model="value1"
-                    type="datetimerange"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期">
-                </el-date-picker>
+                <el-row :gutter="10">
+                    <el-col :span="3">
+                        <el-select v-model="athleteListvalue" clearable placeholder="请选择">
+                            <el-option
+                                v-for="(item, index) in athleteList"
+                                :key="index"
+                                :value="item">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                     <!-- 动作选择器 -->
+                    <el-col :span="3">
+                        <el-select v-model="movementValue" clearable placeholder="请选择">
+                            <el-option
+                                v-for="(item, index) in optionMovement"
+                                :key="index"
+                                :value="item">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    <!-- 时间日期选择器 -->
+                    <el-col :span="3">
+                        <el-date-picker
+                            v-model="actionDatetime"
+                            type="datetimerange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-col>
+                    <!-- 搜素按钮 -->
+                    <el-col :span="3" offset="4">
+                        <el-button type="primary" icon="el-icon-search">搜索</el-button>
+                    </el-col>
+                </el-row>
             </div>
             <el-table
                 :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
@@ -130,7 +140,7 @@
 </template>
 
 <script>
-import { fetchData } from '../../api/index';
+import { fetchAthlete, fetchData } from '../../api/index';
 import { fetchALLData } from '../../api/index';
 import echarts from 'echarts';
 export default {
@@ -157,26 +167,24 @@ export default {
             sportworkYList:[],
             sportworkZList:[],
             //运动员选择器
-            options: [{
-                value: '选项1',
-                label: '黄金糕'
-                }, 
-                {
-                value: '选项2',
-                label: '双皮奶'
-                }, 
-                {
-                value: '选项3',
-                label: '蚵仔煎'
-                }, 
-                {
-                value: '选项4',
-                label: '龙须面'
-                }, 
-                {
-                value: '选项5',
-                label: '北京烤鸭'
-                }],
+            athleteList:[],
+            athleteListvalue:'',
+            movementValue:'',
+            optionMovement:[
+                '正手拉球',
+                '反手拉球',
+                '正手搓球',
+                '反手搓球',
+                '正手攻球',
+                '反手攻球',
+                '正手削球',
+                '反手削球',
+                '正手挑球',
+                '反手挑球',
+                '反手拧球',
+
+            ],
+            actionDatetime:'',
         };
     },
     created() {
@@ -197,6 +205,13 @@ export default {
                 // this.size = this.query.size;
                 //console.log(this.tableData);
 
+            });
+            fetchAthlete(this.query).then(res => {
+                console.log(res);
+                for(var i = 0; i < res.results.length; i++){
+                    this.athleteList[i] = res.results[i].name;
+                }
+                console.log(this.athleteList);
             });
         },
         //echart画图

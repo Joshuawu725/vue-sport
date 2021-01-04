@@ -9,6 +9,16 @@ export const fetchData = query => {
     });
 };
 
+//运动员姓名
+
+export const fetchAthlete = query => {
+    return request({
+        url: './athlete/',
+        method: 'get',
+        params: query
+    });
+};
+
 //前端分页接口
 export const fetchALLData = query => {
     return request({
