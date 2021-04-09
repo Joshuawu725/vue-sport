@@ -7,11 +7,8 @@
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <!-- 折线图区 -->
         <div class="container">
             <div class="handle-box">
-                <!-- 头部位置 根据需求以后加 -->
-                <!-- 运动员选择器 单选 -->
                 <el-row :gutter="10">
                     <el-col :span="3">
                         <el-select v-model="athleteListvalue" clearable placeholder="请选择">
@@ -22,7 +19,6 @@
                             </el-option>
                         </el-select>
                     </el-col>
-                     <!-- 动作选择器 -->
                     <el-col :span="3">
                         <el-select v-model="movementValue" clearable placeholder="请选择">
                             <el-option
@@ -32,7 +28,6 @@
                             </el-option>
                         </el-select>
                     </el-col>
-                    <!-- 时间日期选择器 -->
                     <el-col :span="3">
                         <el-date-picker
                             v-model="actionDatetime"
@@ -42,8 +37,7 @@
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </el-col>
-                    <!-- 搜素按钮 -->
-                    <el-col :span="3" offset="4">
+                    <el-col :span="3" :offset="6">
                         <el-button type="primary" icon="el-icon-search">搜索</el-button>
                     </el-col>
                 </el-row>
@@ -63,25 +57,7 @@
                 <el-table-column prop="action" label="击球动作" align="center"></el-table-column>
                 <el-table-column prop="mark" label="测试序号" align="center"></el-table-column>
                 <el-table-column prop="testid" label="测试ID" align="center"></el-table-column>
-                <el-table-column prop="testdate" label="测试时间" align="center">
-                    <!-- <template slot-scope="scope">￥{{scope.row.money}}</template> -->
-                </el-table-column>
-                <!-- <el-table-column label="头像(查看大图)" align="center">
-                    <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
-                        ></el-image>
-                    </template>
-                </el-table-column> -->
-                <!-- <el-table-column label="状态" align="center">
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
-                    </template>
-                </el-table-column> -->
+                <el-table-column prop="testdate" label="测试时间" align="center"></el-table-column>
                 <el-table-column prop="speedx" label="线速度X"></el-table-column>
                 <el-table-column prop="speedy" label="线速度Y"></el-table-column>
                 <el-table-column prop="speedz" label="线速度Z"></el-table-column>
@@ -142,7 +118,6 @@
 <script>
 import { fetchAthlete, fetchData } from '../../api/index';
 import { fetchALLData } from '../../api/index';
-import echarts from 'echarts';
 export default {
     name: 'basetable',
     data() {

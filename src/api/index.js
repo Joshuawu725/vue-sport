@@ -11,11 +11,11 @@ export const fetchData = query => {
 
 //运动员姓名
 
-export const fetchAthlete = query => {
+export const fetchAthlete = athlete => {
     return request({
         url: './athlete/',
         method: 'get',
-        params: query
+        params: athlete
     });
 };
 

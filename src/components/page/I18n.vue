@@ -2,11 +2,50 @@
     <section class="main">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-global"></i> {{$t('i18n.breadcrumb')}}</el-breadcrumb-item>
+                <el-breadcrumb-item>
+                    <i class="el-icon-lx-cascades"></i> 基础表格
+                </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <span>后端分页测试</span>
+            <div class="handle-box">
+                <el-row :gutter="10">
+                    <el-col :span="3">
+                        <el-select v-model="athleteListvalue" clearable placeholder="请选择">
+                            <el-option
+                                v-for="item in athleteListOption"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-select v-model="movementValue" clearable placeholder="请选择">
+                            <el-option
+                                v-for="item in optionMovement"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-date-picker
+                            v-model="actionDatetime"
+                            type="datetimerange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            value-format="timestamp">
+                        </el-date-picker>
+                    </el-col>
+                    <el-col :span="3" :offset="6">
+                        <el-button type="primary" plain icon="el-icon-search" v-on:click="showFilter">搜索</el-button>
+                    </el-col>
+                </el-row>
+            </div>
+            
             <el-table
                 :data="eviLists"
                 border
@@ -47,13 +86,10 @@
 
 <script>
 import { fetchData } from '../../api/index';
+import { fetchAthlete } from '../../api/index';
 export default {
     data(){
         return {
-            // query:{
-            //     page : 1,
-            //     size : 2
-            // },
             query:{},
             currentPage:1,
             total:null,
@@ -61,11 +97,65 @@ export default {
             list:[],
             page:1,
             eviLists:[],
-
+            //运动员选择器
+            athlete:{},
+            athletepage:2,
+            athleteList:[],
+            athleteListOption:[],
+            athleteListvalue:'',
+            movementValue:'',
+            optionMovement:[
+                {
+                value:"1",
+                label:"正手拉球"
+                },
+                {
+                    value:"2",
+                    label:"反手拉球"
+                },
+                {
+                    value:"3",
+                    label:"正手搓球"
+                },
+                {
+                    value:"4",
+                    label:"反手搓球"
+                },
+                {
+                    value:"5",
+                    label:"正手攻球"
+                },
+                {
+                    value:"6",
+                    label:"反手攻球"
+                },
+                {
+                    value:"7",
+                    label:"正手削球"
+                },
+                {
+                    value:"8",
+                    label:"反手削球"
+                },
+                {
+                    value:"9",
+                    label:"正手挑球"
+                },
+                {
+                    value:"10",
+                    label:"反手挑球"
+                },
+                {
+                    value:"11",
+                    label:"反手拧球"
+                }
+            ],
+            actionDatetime:'',
         }
     },
     created() {
         this.getlist();
+        this.getAthlete();
     },
     mounted(){
         // this.getinfoList()
@@ -108,14 +198,36 @@ export default {
                 page: this.page,//后端已经分好了数据
                 size: this.limit //条数
             };
-            console.log("页数："+ this.page + "条数：" + this.limit),
+            // console.log("页数："+ this.page + "条数：" + this.limit),
             fetchData(this.query).then( res => {
                 this.eviLists = res.results //后端返回的数据
                 this.total = res.count // 后端返回的总条数
                 // this.getinfoList()  //获取数据之后进行分页
             });
             
-        }
+        },
+        getAthlete(){
+            this.athlete = {
+                page: this.athletepage
+            };
+            fetchAthlete(this.athlete).then( res => {
+                this.athleteList = res.results
+                
+                for(var i = 0; i < this.athleteList.length; i ++){
+                    var item = {};
+                    item.value = this.athleteList[i].athleteid
+                    item.label = this.athleteList[i].name
+                    // console.log(item);
+                    this.athleteListOption.push(item)
+                }
+                // console.log(this.athleteListOption);
+            });
+        },
+        showFilter(){
+            console.log(this.athleteListvalue);
+            console.log(this.movementValue);
+            console.log(this.actionDatetime);
+        },
     }
 }
 </script>
