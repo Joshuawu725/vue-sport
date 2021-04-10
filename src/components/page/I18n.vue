@@ -87,6 +87,7 @@
 <script>
 import { fetchData } from '../../api/index';
 import { fetchAthlete } from '../../api/index';
+import { filteData } from '../../api/index';
 export default {
     data(){
         return {
@@ -151,6 +152,7 @@ export default {
                 }
             ],
             actionDatetime:'',
+            filter:{},
         }
     },
     created() {
@@ -208,7 +210,9 @@ export default {
         },
         getAthlete(){
             this.athlete = {
-                page: this.athletepage
+                format: "json",
+                page: 1,
+                size: 500
             };
             fetchAthlete(this.athlete).then( res => {
                 this.athleteList = res.results
@@ -227,6 +231,19 @@ export default {
             console.log(this.athleteListvalue);
             console.log(this.movementValue);
             console.log(this.actionDatetime);
+            // function isEmpty(obj){
+	        //         return (typeof obj === 'undefined' || obj === null || obj === "");
+            // }
+            this.filter = {
+                athlete: this.athleteListvalue,
+                action: this.movementValue,
+            };
+            filteData(this.filter).then( res => {
+                this.eviLists = res.results //后端返回的数据
+                console.log(this.eviLists);
+                this.total = res.count // 后端返回的总条数
+                // this.getinfoList()  //获取数据之后进行分页
+            });
         },
     }
 }
