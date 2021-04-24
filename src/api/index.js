@@ -18,6 +18,14 @@ export const filteData = filter => {
     });
 };
 
+export const filteDataDraw = filterDraw => {
+    return request({
+        url: './test/',
+        method: 'get',
+        params: filterDraw,
+    });
+};
+
 //运动员姓名
 
 export const fetchAthlete = athlete => {
