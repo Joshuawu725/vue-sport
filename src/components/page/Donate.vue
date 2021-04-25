@@ -193,22 +193,22 @@ export default {
             // console.log(this.filterDraw);
             filteDataDraw(this.filterDraw).then( res => {
                 this.filterData = res
-                console.log(this.filterData);
+                // console.log(JSON.stringify(this.filterData));
                 // this.athletenameList = this.filterData[0][0].name
                 for(var tuple in this.filterData){
                     var item = [];
                     item = this.filterData[tuple][0].name;
                     this.athletenameList.push(item)
-                    // console.log(item);
+                    // console.log(JSON.stringify(item));
                     var echartdata_Y = []
                     for(var x in this.filterData[tuple][1].data.rightshoulder_pos_x){
                         var data_Y_item = [];
                         data_Y_item = this.filterData[tuple][1].data.rightshoulder_pos_x[x];
                         echartdata_Y.push(data_Y_item)
-                        // console.log(data_Y_item);
+                        // console.log(JSON.stringify(data_Y_item));
                         
                     };
-                    // console.log(echartdata_Y);
+                    // console.log(JSON.stringify(echartdata_Y
                     this.echartdata_Y_item = {
                         name: item,
                         type: 'line',
@@ -218,23 +218,28 @@ export default {
                     this.echartdata_series[tuple] = this.echartdata_Y_item
 
                 }
-                // console.log(this.athletenameList);
-                
+                // console.log(JSON.stringify(this.athletenameList));
+                // console.log(JSON.stringify(this.echartdata_series));
                 for(var x in this.filterData[0][1].data.id){
                     var item = [];
                     item = this.filterData[0][1].data.id[x];
                     this.echartdata_X.push(item)
-                }
-                
-                // console.log(this.echartdata_Y)
+                };
+                // console.log(JSON.stringify(this.echartdata_X));
+                // console.log(JSON.stringify(this.echartdata_Y));
+            // console.log(JSON.stringify(this.athletenameList));
+            // console.log(JSON.stringify(this.echartdata_X));
+            // console.log(JSON.stringify(this.echartdata_series));
+            this.darwChart(); //在这里 异步的请求的函数里就行
             });
-            this.darwChart();
+            
+            
         },
         //echart画图
         darwChart(){
-            console.log(this.athletenameList);
-            console.log(this.echartdata_X);
-            console.log(this.echartdata_series);
+            // console.log(JSON.stringify(this.athletenameList));
+            // console.log(JSON.stringify(this.echartdata_X));
+            // console.log(JSON.stringify(this.echartdata_series));
             let echarts = require('echarts');
             // 基于准备好的dom，初始化echarts实例
             let myChart = echarts.init(document.getElementById('echart_test'));
@@ -270,17 +275,9 @@ export default {
                     type: 'value'
                 },
                 series: this.echartdata_series
-    
-
-                    // {
-                    //     name: '功Z',
-                    //     type: 'line',
-                    //     smooth: true,
-                    //     stack: '总量',
-                    //     data: this.sportworkZList
-                    // }
                 
             };
+            console.log(JSON.stringify(option));
             option && myChart.setOption(option);
         }
     }
