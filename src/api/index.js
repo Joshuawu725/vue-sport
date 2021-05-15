@@ -25,6 +25,15 @@ export const filteDataDraw = filterDraw => {
         params: filterDraw,
     });
 };
+//对比的特征
+
+export const filteComparevalue = filteComparevalue => {
+    return request({
+        url: './confusion/',
+        method: 'get',
+        params: filteComparevalue,
+    });
+};
 
 //运动员姓名
 

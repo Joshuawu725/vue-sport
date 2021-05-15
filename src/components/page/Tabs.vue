@@ -2,128 +2,284 @@
     <div class="">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-copy"></i> tab选项卡</el-breadcrumb-item>
+                <el-breadcrumb-item>
+                    <i class="el-icon-lx-copy">相关性矩阵</i>
+                </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-tabs v-model="message">
-                <el-tab-pane :label="`未读消息(${unread.length})`" name="first">
-                    <el-table :data="unread" :show-header="false" style="width: 100%">
-                        <el-table-column>
-                            <template slot-scope="scope">
-                                <span class="message-title">{{scope.row.title}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="date" width="180"></el-table-column>
-                        <el-table-column width="120">
-                            <template slot-scope="scope">
-                                <el-button size="small" @click="handleRead(scope.$index)">标为已读</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <div class="handle-row">
-                        <el-button type="primary">全部标为已读</el-button>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane :label="`已读消息(${read.length})`" name="second">
-                    <template v-if="message === 'second'">
-                        <el-table :data="read" :show-header="false" style="width: 100%">
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="date" width="150"></el-table-column>
-                            <el-table-column width="120">
-                                <template slot-scope="scope">
-                                    <el-button type="danger" @click="handleDel(scope.$index)">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="handle-row">
-                            <el-button type="danger">删除全部</el-button>
-                        </div>
-                    </template>
-                </el-tab-pane>
-                <el-tab-pane :label="`回收站(${recycle.length})`" name="third">
-                    <template v-if="message === 'third'">
-                        <el-table :data="recycle" :show-header="false" style="width: 100%">
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="date" width="150"></el-table-column>
-                            <el-table-column width="120">
-                                <template slot-scope="scope">
-                                    <el-button @click="handleRestore(scope.$index)">还原</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="handle-row">
-                            <el-button type="danger">清空回收站</el-button>
-                        </div>
-                    </template>
-                </el-tab-pane>
-            </el-tabs>
+            <div class="handle-box">
+                <el-row :gutter="12">
+                    <el-col :span="8">
+                        <el-select v-model="compareValue" multiple size="medium" placeholder="请选择需要的对比的变量">
+                            <el-option
+                                v-for="item in compareOption"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            >
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="primary" plain icon="el-icon-search" v-on:click="showCompare">对比</el-button>
+                    </el-col>
+                </el-row>
+            </div>
+        </div>
+        <div class="container">
+            <div class="comparePic">
+                <img :src="this.filteCompareData"/>
+            </div>
         </div>
     </div>
 </template>
 
+
 <script>
+import { filteComparevalue } from '../../api/index';
     export default {
         name: 'tabs',
         data() {
             return {
-                message: 'first',
-                showHeader: false,
-                unread: [{
-                    date: '2018-04-19 20:00:00',
-                    title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护',
-                },{
-                    date: '2018-04-19 21:00:00',
-                    title: '今晚12点整发大红包，先到先得',
-                }],
-                read: [{
-                    date: '2018-04-19 20:00:00',
-                    title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-                }],
-                recycle: [{
-                    date: '2018-04-19 20:00:00',
-                    title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-                }]
+               compareValue:'',
+               compareOption:[
+                   {
+                        value:"type",
+                        label:"type",
+                   },
+                   {
+                       value:"phases",
+                       label:"phases",
+                   },
+                   {
+                       value:"hip_pos_x",
+                       label:"hip_pos_x",
+                   },
+                   {
+                       value:"hip_pos_y",
+                       label:"hip_pos_y",
+                   },
+                   {
+                       value:"hip_pos_z",
+                       label:"hip_pos_z",
+                   },
+                   {
+                       value:"hip_rot_x",
+                       label:"hip_rot_x",
+                   },
+                   {
+                       value:"hip_rot_y",
+                       label:"hip_rot_y",
+                   },
+                   {
+                       value:"hip_rot_z",
+                       label:"hip_rot_z",
+                   },
+                   {
+                       value:"leftshoulder_pos_x",
+                       label:"leftshoulder_pos_x",
+                   },
+                   {
+                       value:"leftshoulder_pos_y",
+                       label:"leftshoulder_pos_y",
+                   },
+                   {
+                       value:"leftshoulder_pos_z",
+                       label:"leftshoulder_pos_z",
+                   },
+                   {
+                       value:"leftshoulder_rot_x",
+                       label:"leftshoulder_rot_x",
+                   },
+                   {
+                       value:"leftshoulder_rot_y",
+                       label:"leftshoulder_rot_y",
+                   },
+                   {
+                       value:"leftshoulder_rot_z",
+                       label:"leftshoulder_rot_z",
+                   },
+                   {
+                       value:"leftarm_pos_x",
+                       label:"leftarm_pos_x",
+                   },
+                   {
+                       value:"leftarm_pos_y",
+                       label:"leftarm_pos_y",
+                   },
+                   {
+                       value:"leftarm_pos_z",
+                       label:"leftarm_pos_z",
+                   },
+                   {
+                       value:"leftarm_rot_x",
+                       label:"leftarm_rot_x",
+                   },
+                   {
+                       value:"leftarm_rot_y",
+                       label:"leftarm_rot_y",
+                   },
+                   {
+                       value:"leftarm_rot_z",
+                       label:"leftarm_rot_z",
+                   },
+                   {
+                       value:"rightshoulder_pos_x",
+                       label:"rightshoulder_pos_x",
+                   },
+                   {
+                       value:"rightshoulder_pos_y",
+                       label:"rightshoulder_pos_y",
+                   },
+                   {
+                       value:"rightshoulder_pos_z",
+                       label:"rightshoulder_pos_z",
+                   },
+                   {
+                       value:"rightshoulder_rot_x",
+                       label:"rightshoulder_rot_x",
+                   },
+                   {
+                       value:"rightshoulder_rot_y",
+                       label:"rightshoulder_rot_y",
+                   },
+                   {
+                       value:"rightshoulder_rot_z",
+                       label:"rightshoulder_rot_z",
+                   },
+                   {
+                       value:"rightarm_pos_x",
+                       label:"rightarm_pos_x",
+                   },
+                   {
+                       value:"rightarm_pos_y",
+                       label:"rightarm_pos_y",
+                   },
+                   {
+                       value:"rightarm_pos_z",
+                       label:"rightarm_pos_z",
+                   },
+                   {
+                       value:"rightarm_rot_x",
+                       label:"rightarm_rot_x",
+                   },
+                   {
+                       value:"rightarm_rot_y",
+                       label:"rightarm_rot_y",
+                   },
+                   {
+                       value:"rightarm_rot_z",
+                       label:"rightarm_rot_z",
+                   },
+                   {
+                       value:"leftleg_pos_x",
+                       label:"leftleg_pos_x",
+                   },
+                   {
+                       value:"leftleg_pos_y",
+                       label:"leftleg_pos_y",
+                   },
+                   {
+                       value:"leftleg_pos_z",
+                       label:"leftleg_pos_z",
+                   },
+                   {
+                       value:"leftleg_rot_x",
+                       label:"leftleg_rot_x",
+                   },
+                   {
+                       value:"leftfoot_pos_x",
+                       label:"leftfoot_pos_x",
+                   },
+                   {
+                       value:"leftfoot_pos_y",
+                       label:"leftfoot_pos_y",
+                   },
+                   {
+                       value:"leftfoot_pos_z",
+                       label:"leftfoot_pos_z",
+                   },
+                   {
+                       value:"leftfoot_rot_x",
+                       label:"leftfoot_rot_x",
+                   },
+                   {
+                       value:"leftfoot_rot_y",
+                       label:"leftfoot_rot_y",
+                   },
+                   {
+                       value:"leftfoot_rot_z",
+                       label:"leftfoot_rot_z",
+                   },
+                   {
+                       value:"rightleg_pos_x",
+                       label:"rightleg_pos_x",
+                   },
+                   {
+                       value:"rightleg_pos_y",
+                       label:"rightleg_pos_y",
+                   },
+                   {
+                       value:"rightleg_pos_z",
+                       label:"rightleg_pos_z",
+                   },
+                   {
+                       value:"rightleg_rot_x",
+                       label:"rightleg_rot_x",
+                   },
+                   {
+                       value:"rightfoot_pos_x",
+                       label:"rightfoot_pos_x",
+                   },
+                   {
+                       value:"rightfoot_pos_y",
+                       label:"rightfoot_pos_y",
+                   },
+                   {
+                       value:"rightfoot_pos_z",
+                       label:"rightfoot_pos_z",
+                   },
+                   {
+                       value:"rightfoot_rot_x",
+                       label:"rightfoot_rot_x",
+                   },
+                   {
+                       value:"rightfoot_rot_y",
+                       label:"rightfoot_rot_y",
+                   },
+               ],
+               filteComparevalue:{},
+               filteCompareData:[],
             }
         },
         methods: {
-            handleRead(index) {
-                const item = this.unread.splice(index, 1);
-                console.log(item);
-                this.read = item.concat(this.read);
+            showCompare(){
+               this.filteComparevalue = {
+                   alist: this.compareValue.join(",")
+               }
+               console.log(this.filteComparevalue);
+               console.log(JSON.stringify(this.filteComparevalue));
+               filteComparevalue(this.filteComparevalue).then(res => {
+                   this.filteCompareData = res.pic_path
+                   console.log(this.filteCompareData);
+               })
             },
-            handleDel(index) {
-                const item = this.read.splice(index, 1);
-                this.recycle = item.concat(this.recycle);
-            },
-            handleRestore(index) {
-                const item = this.recycle.splice(index, 1);
-                this.read = item.concat(this.read);
-            }
         },
-        computed: {
-            unreadNum(){
-                return this.unread.length;
-            }
-        }
     }
 
 </script>
-
 <style>
 .message-title{
     cursor: pointer;
 }
 .handle-row{
     margin-top: 30px;
+}
+.comparePic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>
 

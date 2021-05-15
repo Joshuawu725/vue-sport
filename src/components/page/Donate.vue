@@ -77,8 +77,8 @@ export default {
             movementValue:'',
             movementOption:[
                 {
-                value:"1",
-                label:"正手拉球"
+                    value:"1",
+                    label:"正手拉球"
                 },
                 {
                     value:"2",
