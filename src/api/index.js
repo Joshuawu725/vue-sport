@@ -29,7 +29,7 @@ export const filteDataDraw = filterDraw => {
 
 export const filteComparevalue = filteComparevalue => {
     return request({
-        url: './confusion/',
+        url: './confusion2/',
         method: 'get',
         params: filteComparevalue,
     });
