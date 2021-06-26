@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                   先放着 最后填文字
+                   曲线相似度对比
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -138,10 +138,228 @@ export default {
             ],
             jointValue:'',
             jointOption:[
+                // {
+                //     value:"rightshoulder_pos_x",
+                //     label:"右肩X位移"
+                // },
+                {
+                    value:"hip_pos_x",
+                    label:"髋关节X位移"
+                },
+                {
+                    value:"hip_pos_y",
+                    label:"髋关节Y位移"
+                },
+                {
+                    value:"hip_pos_z",
+                    label:"髋关节Z位移"
+                },
+                {
+                    value:"hip_rot_x",
+                    label:"髋关节X角度"
+                },
+                {
+                    value:"hip_rot_y",
+                    label:"髋关节Y角度"
+                },
+                {
+                    value:"hip_rot_z",
+                    label:"髋关节Z角度"
+                },
+                {
+                    value:"leftshoulder_pos_x",
+                    label:"左肩X位移"
+                },
+                {
+                    value:"leftshoulder_pos_y",
+                    label:"左肩Y位移"
+                },
+                {
+                    value:"leftshoulder_pos_z",
+                    label:"左肩Z位移"
+                },
+                {
+                    value:"leftshoulder_rot_x",
+                    label:"左肩X角度"
+                },
+                {
+                    value:"leftshoulder_rot_y",
+                    label:"左肩Y角度"
+                },
+                {
+                    value:"leftshoulder_rot_z",
+                    label:"左肩Z角度"
+                },
+                {
+                    value:"leftarm_pos_x",
+                    label:"左臂X位移"
+                },
+                {
+                    value:"leftarm_pos_y",
+                    label:"左臂Y位移"
+                },
+                {
+                    value:"leftarm_pos_z",
+                    label:"左臂Z位移"
+                },
+                {
+                    value:"leftarm_rot_x",
+                    label:"左臂X角度"
+                },
+                {
+                    value:"leftarm_rot_y",
+                    label:"左臂Y角度"
+                },
+                {
+                    value:"leftarm_rot_z",
+                    label:"左臂Z角度"
+                },
                 {
                     value:"rightshoulder_pos_x",
                     label:"右肩X位移"
-                }
+                },
+                {
+                    value:"rightshoulder_pos_y",
+                    label:"右肩Y位移"
+                },
+                {
+                    value:"rightshoulder_pos_z",
+                    label:"右肩Z位移"
+                },
+                {
+                    value:"rightshoulder_rot_x",
+                    label:"右肩X角度"
+                },
+                {
+                    value:"rightshoulder_rot_y",
+                    label:"右肩Y角度"
+                },
+                {
+                    value:"rightshoulder_rot_z",
+                    label:"右肩Z角度"
+                },
+                {
+                    value:"rightarm_pos_x",
+                    label:"右臂X位移"
+                },
+                {
+                    value:"rightarm_pos_y",
+                    label:"右臂Y位移"
+                },
+                {
+                    value:"rightarm_pos_z",
+                    label:"右臂Z位移"
+                },
+                {
+                    value:"rightarm_rot_x",
+                    label:"右臂X角度"
+                },
+                {
+                    value:"rightarm_rot_y",
+                    label:"右臂Y角度"
+                },
+                {
+                    value:"rightarm_rot_z",
+                    label:"右臂Z角度"
+                },
+                {
+                    value:"leftleg_pos_x",
+                    label:"左腿X位移"
+                },
+                {
+                    value:"leftleg_pos_y",
+                    label:"左腿Y位移"
+                },
+                {
+                    value:"leftleg_pos_z",
+                    label:"左腿Z位移"
+                },
+                {
+                    value:"leftleg_rot_x",
+                    label:"左腿X角度"
+                },
+                {
+                    value:"leftleg_rot_y",
+                    label:"左腿Y角度"
+                },
+                {
+                    value:"leftleg_rot_z",
+                    label:"左腿Z角度"
+                },
+                {
+                    value:"leftfoot_pos_x",
+                    label:"左脚X位移"
+                },
+                {
+                    value:"leftfoot_pos_y",
+                    label:"左脚Y位移"
+                },
+                {
+                    value:"leftfoot_pos_z",
+                    label:"左脚Z位移"
+                },
+                {
+                    value:"leftfoot_rot_x",
+                    label:"左脚X角度"
+                },
+                {
+                    value:"leftfoot_rot_y",
+                    label:"左脚Y角度"
+                },
+                {
+                    value:"leftfoot_rot_z",
+                    label:"左脚Z角度"
+                },
+
+                {
+                    value:"rightleg_pos_x",
+                    label:"右腿X位移"
+                },
+                {
+                    value:"rightleg_pos_y",
+                    label:"右腿Y位移"
+                },
+                {
+                    value:"rightleg_pos_z",
+                    label:"右腿Z位移"
+                },
+                {
+                    value:"rightleg_rot_x",
+                    label:"右腿X角度"
+                },
+                {
+                    value:"rightleg_rot_y",
+                    label:"右腿Y角度"
+                },
+                {
+                    value:"rightleg_rot_z",
+                    label:"右腿Z角度"
+                },
+                {
+                    value:"rightfoot_pos_x",
+                    label:"右脚X位移"
+                },
+                {
+                    value:"rightfoot_pos_y",
+                    label:"右脚Y位移"
+                },
+                {
+                    value:"rightfoot_pos_z",
+                    label:"右脚Z位移"
+                },
+                {
+                    value:"rightfoot_rot_x",
+                    label:"右脚X角度"
+                },
+                {
+                    value:"rightfoot_rot_y",
+                    label:"右脚Y角度"
+                },
+                {
+                    value:"rightfoot_rot_z",
+                    label:"右脚Z角度"
+                },
+
             ],
             filterDraw:{},
             filterData:[],
@@ -180,12 +398,14 @@ export default {
         },
         //过滤
         showFilter(){
+            this.echartdata_series = []
+            this.echartdata_X = []
             // console.log(this.athleteListvalue);
             this.athleteidValue = this.athleteListvalue.join(",");
             this.filterDraw = {
                 
-                athleteid: 'S008,S007',
-                // athleteid: this.athleteidValue,
+                // athleteid: 'S008,S007',
+                athleteid: this.athleteidValue,
                 actionid: this.movementValue,
                 phasesid: this.phasesValue,
                 joint: this.jointValue,
@@ -193,7 +413,9 @@ export default {
             // console.log(this.filterDraw);
             filteDataDraw(this.filterDraw).then( res => {
                 this.filterData = res
-                // console.log(JSON.stringify(this.filterData));
+                this.echartdata_series = []
+                this.echartdata_X = []
+                // console.log(JSON.stringify(this.echartdata_series));
                 // this.athletenameList = this.filterData[0][0].name
                 for(var tuple in this.filterData){
                     var item = [];
@@ -247,7 +469,7 @@ export default {
             var option
             option = {
                 title: {
-                    text: '异步折线图堆叠'
+                    text: '曲线相似度对比'
                 },
                 tooltip: {
                     trigger: 'axis'
@@ -277,8 +499,8 @@ export default {
                 series: this.echartdata_series
                 
             };
-            console.log(JSON.stringify(option));
-            option && myChart.setOption(option);
+            // console.log(JSON.stringify(option));
+            option && myChart.setOption(option,true);
         }
     }
 }

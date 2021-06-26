@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 基础表格
+                    <i class="el-icon-lx-cascades"></i> 运动员信息查询
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -47,7 +47,7 @@
             </div>
             
             <el-table
-                :data="eviLists"
+                :data="eviLists.slice((currentPage-1)*pagesize,currentPage*pagesize)"
                 border
                 stripe
                 class="table"
@@ -74,7 +74,7 @@
                     @current-change="handleCurrentChange"
                     :current-page.sync="currentPage"
                     :page-sizes="[15, 30, 50, 100, 200]"
-                    :page-size="15"
+                    :page-size="pagesize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total"
                     background
@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { fetchData } from '../../api/index';
+// import { fetchData } from '../../api/index';
 import { fetchAthlete } from '../../api/index';
 import { filteData } from '../../api/index';
 export default {
@@ -94,9 +94,11 @@ export default {
             query:{},
             currentPage:1,
             total:null,
+            pagesize:15,
+            //
             limit:15,
             list:[],
-            page:1,
+            // page:1,
             eviLists:[],
             //运动员选择器
             athlete:{},
@@ -156,63 +158,63 @@ export default {
         }
     },
     created() {
-        this.getlist();
+        this.showFilter();
         this.getAthlete();
     },
     mounted(){
         // this.getinfoList()
     },
     methods:{
-        // getData() {
-        //     fetchData(this.query).then(res => {
-        //         console.log(res);
-        //         // this.pageTotal = res.pageTotal || 50;
-        //         this.tableData = res.results;
-        //         // this.page = this.query.page;
-        //         // this.size = this.query.size;
-        //         //console.log(this.tableData);
-
-        //     });
-        // },
-        // getinfoList(){
-        //     let fyData = this.eviLists
-        //     this.list = fyData.filter((item, index) =>
-        //         index < this.page * this.limit && index >= this.limit * (this.page - 1)
-        //     )
-        //     this.page = 1
-        // },
-        handleSizeChange(val) {
-            this.limit = val
-            this.getlist()
-            console.log(`每页 ${val} 条`);
-            this.page = 1
-            console.log("强制第一页");
+        handleSizeChange(size) {
+            this.pagesize = size
+            // this.showFilter()
+            // this.showFilter()
+            // console.log(`每页 ${size} 条`);
+            // this.page = 1
+            // console.log("强制第一页");
         },
-        handleCurrentChange(val) {
-            this.page = val
-            this.getlist()
-            console.log(`当前页: ${val}`);
+        handleCurrentChange(currentPage) {
+            this.currentPage  = currentPage
+            // this.showFilter()
+            // this.showFilter()
+            // console.log(`当前页: ${currentPage}`);
             
         },
         //获取后端数据，后端已经进行了分页
-        getlist(){
-            this.query = {//传给后端的参数
-                page: this.page,//后端已经分好了数据
-                size: this.limit //条数
-            };
-            // console.log("页数："+ this.page + "条数：" + this.limit),
-            fetchData(this.query).then( res => {
-                this.eviLists = res.results //后端返回的数据
-                this.total = res.count // 后端返回的总条数
-                // this.getinfoList()  //获取数据之后进行分页
-            });
+        // getlist(){
+        //     this.query = {//传给后端的参数
+        //         page: this.currentPage,//后端已经分好了数据
+        //         size: this.pagesize //条数
+        //     };
+        //     // console.log("页数："+ this.page + "条数：" + this.limit),
+        //     fetchData(this.query).then( res => {
+        //         this.eviLists = res.results //后端返回的数据
+        //         this.total = res.count // 后端返回的总条数
+        //         // this.getinfoList()  //获取数据之后进行分页
+        //         console.log("请求数据")
+        //     });
             
-        },
+        // },
+
+        // TransformDatatimeForData(time){
+        //     if(time == null || time == ''){
+        //         return ''
+        //     }
+        //     var date=new Date(parseInt(time));
+        //     var Y = date.getFullYear() + '-';
+        //     var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        //     var D = date.getDate() + ' ';
+        //     var h = date.getHours() + ':';
+        //     var m = date.getMinutes() + ':';
+        //     var s = date.getSeconds(); 
+        //     var res = Y+M+D+h+m+s
+        //     return res
+        // },
         getAthlete(){
             this.athlete = {
                 format: "json",
                 page: 1,
-                size: 500
+                size: 100
             };
             fetchAthlete(this.athlete).then( res => {
                 this.athleteList = res.results
@@ -228,22 +230,32 @@ export default {
             });
         },
         showFilter(){
-            console.log(this.athleteListvalue);
-            console.log(this.movementValue);
-            console.log(this.actionDatetime);
-            // function isEmpty(obj){
-	        //         return (typeof obj === 'undefined' || obj === null || obj === "");
-            // }
+            // console.log(this.athleteListvalue);
+            // console.log(this.movementValue);
+            // console.log(this.actionDatetime);
             this.filter = {
-                athlete: this.athleteListvalue,
-                action: this.movementValue,
+                // page: this.currentPage,
+                // size: this.pagesize,
+                //
+                athleteid: this.athleteListvalue,
+                actionid: this.movementValue,
+                start_time: this.actionDatetime[0],
+                end_time: this.actionDatetime[1],
             };
+            // console.log(this.filter);
+            // console.log(this.movementValue);
+            // console.log(this.actionDatetime);
             filteData(this.filter).then( res => {
-                this.eviLists = res.results //后端返回的数据
-                console.log(this.eviLists);
+                this.eviLists = res.data //后端返回的数据
+                // console.log(this.eviLists);
                 this.total = res.count // 后端返回的总条数
-                // this.getinfoList()  //获取数据之后进行分页
+                // console.log(this.total);
+                    
+                // console.log(this.currentPage);
+                    // this.getinfoList()  //获取数据之后进行分页
             });
+            
+        
         },
     }
 }

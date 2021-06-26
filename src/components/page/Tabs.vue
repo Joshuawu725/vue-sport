@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-copy">相关性矩阵</i>
+                    <i class="el-icon-lx-copy">相关性分析</i>
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -33,7 +33,7 @@
                         </el-select>
                     </el-col>
                     <el-col :span="2">
-                        <el-button type="primary" plain icon="el-icon-search" v-on:click="showCompare">比较</el-button>
+                        <el-button type="primary" plain icon="el-icon-search" v-on:click="showCompare">分析</el-button>
                     </el-col>
                 </el-row>
             </div>
