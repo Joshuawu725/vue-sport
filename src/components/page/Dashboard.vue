@@ -7,7 +7,6 @@
         </div>
         <div class="container">
             <div class="block">
-                <span class="demonstration">Click 指示器触发</span>
                 <el-carousel trigger="click" height="500px">
                 <el-carousel-item v-for="(item, i) in images" :key="i">
                     <img v-bind:src="item.url"  height="100%" width="100%" alt="无图片"/>

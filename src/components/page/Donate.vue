@@ -402,58 +402,72 @@ export default {
             this.echartdata_X = []
             // console.log(this.athleteListvalue);
             this.athleteidValue = this.athleteListvalue.join(",");
-            this.filterDraw = {
-                
-                // athleteid: 'S008,S007',
-                athleteid: this.athleteidValue,
-                actionid: this.movementValue,
-                phasesid: this.phasesValue,
-                joint: this.jointValue,
-            };
-            // console.log(this.filterDraw);
-            filteDataDraw(this.filterDraw).then( res => {
-                this.filterData = res
-                this.echartdata_series = []
-                this.echartdata_X = []
-                // console.log(JSON.stringify(this.echartdata_series));
-                // this.athletenameList = this.filterData[0][0].name
-                for(var tuple in this.filterData){
-                    var item = [];
-                    item = this.filterData[tuple][0].name;
-                    this.athletenameList.push(item)
-                    // console.log(JSON.stringify(item));
-                    var echartdata_Y = []
-                    for(var x in this.filterData[tuple][1].data.rightshoulder_pos_x){
-                        var data_Y_item = [];
-                        data_Y_item = this.filterData[tuple][1].data.rightshoulder_pos_x[x];
-                        echartdata_Y.push(data_Y_item)
-                        // console.log(JSON.stringify(data_Y_item));
-                        
-                    };
-                    // console.log(JSON.stringify(echartdata_Y
-                    this.echartdata_Y_item = {
-                        name: item,
-                        type: 'line',
-                        smooth: true,
-                        data: echartdata_Y
-                    }
-                    this.echartdata_series[tuple] = this.echartdata_Y_item
-
-                }
-                // console.log(JSON.stringify(this.athletenameList));
-                // console.log(JSON.stringify(this.echartdata_series));
-                for(var x in this.filterData[0][1].data.id){
-                    var item = [];
-                    item = this.filterData[0][1].data.id[x];
-                    this.echartdata_X.push(item)
+            console.log(this.athleteListvalue.length);
+            if(this.athleteListvalue.length < 2 || this.athleteidValue == null || this.athleteidValue == ''|| this.movementValue == null || this.movementValue == '' || this.phasesValue == null || this.phasesValue == '' || this.jointValue == null || this.jointValue == ''){
+                this.$alert('请选择完整的过滤选项', '警告', {
+                confirmButtonText: '确定',
+                });
+            } 
+            else{
+                this.filterDraw = {
+                    // athleteid: 'S008,S007',
+                    athleteid: this.athleteidValue,
+                    actionid: this.movementValue,
+                    phasesid: this.phasesValue,
+                    chosen_y: this.jointValue,
                 };
-                // console.log(JSON.stringify(this.echartdata_X));
-                // console.log(JSON.stringify(this.echartdata_Y));
-            // console.log(JSON.stringify(this.athletenameList));
-            // console.log(JSON.stringify(this.echartdata_X));
-            // console.log(JSON.stringify(this.echartdata_series));
-            this.darwChart(); //在这里 异步的请求的函数里就行
-            });
+                // console.log(this.filterDraw);
+                filteDataDraw(this.filterDraw).then( res => {
+                    if(JSON.stringify(res) === '{}'){
+                        this.$alert('没有查找到相关数据', '警告', {
+                        confirmButtonText: '确定',
+                        });
+                    }else{
+                        this.filterData = res
+                        this.echartdata_series = []
+                        this.echartdata_X = []
+                        // console.log(this.filterData);
+                        // console.log(JSON.stringify(this.echartdata_series));
+                        // this.athletenameList = this.filterData[0][0].name
+                        for(var tuple in this.filterData){
+                            var item = [];
+                            item = this.filterData[tuple][0].name;
+                            this.athletenameList.push(item)
+                            // console.log(JSON.stringify(item));
+                            var echartdata_Y = []
+                            for(var x in this.filterData[tuple][1].data.chosen_y){
+                                var data_Y_item = [];
+                                data_Y_item = this.filterData[tuple][1].data.chosen_y[x];
+                                echartdata_Y.push(data_Y_item)
+                                // console.log(JSON.stringify(data_Y_item));
+                                
+                            };
+                            // console.log(JSON.stringify(echartdata_Y
+                            this.echartdata_Y_item = {
+                                name: item,
+                                type: 'line',
+                                smooth: true,
+                                data: echartdata_Y
+                            }
+                            this.echartdata_series[tuple] = this.echartdata_Y_item
+
+                        }
+                        // console.log(JSON.stringify(this.athletenameList));
+                        // console.log(JSON.stringify(this.echartdata_series));
+                        for(var x in this.filterData[0][1].data.id){
+                            var item = [];
+                            item = this.filterData[0][1].data.id[x];
+                            this.echartdata_X.push(item)
+                        };
+                        // console.log(JSON.stringify(this.echartdata_X));
+                        // console.log(JSON.stringify(this.echartdata_Y));
+                    // console.log(JSON.stringify(this.athletenameList));
+                    // console.log(JSON.stringify(this.echartdata_X));
+                    // console.log(JSON.stringify(this.echartdata_series));
+                        this.darwChart(); //在这里 异步的请求的函数里就行
+                    }
+                });
+            }
             
             
         },

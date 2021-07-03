@@ -158,7 +158,7 @@ export default {
         }
     },
     created() {
-        this.showFilter();
+        this.getFilter();
         this.getAthlete();
     },
     mounted(){
@@ -229,10 +229,28 @@ export default {
                 // console.log(this.athleteListOption);
             });
         },
+        getFilter(){
+            this.filter = {
+                athleteid: this.athleteListvalue,
+                actionid: this.movementValue,
+                start_time: this.actionDatetime[0],
+                end_time: this.actionDatetime[1],
+            };
+            filteData(this.filter).then( res => {
+                this.eviLists = res.data //后端返回的数据
+                this.total = res.count // 后端返回的总条数
+            });
+        },
         showFilter(){
             // console.log(this.athleteListvalue);
             // console.log(this.movementValue);
             // console.log(this.actionDatetime);
+            if(this.athleteListvalue == null || this.athleteListvalue == ''|| this.movementValue == null || this.movementValue == '' || this.actionDatetime.length != 2 || this.actionDatetime == '' || this.actionDatetime == null){
+                this.$alert('请选择完整的过滤选项', '警告', {
+                confirmButtonText: '确定',
+                });
+            }
+            else{
             this.filter = {
                 // page: this.currentPage,
                 // size: this.pagesize,
@@ -245,17 +263,25 @@ export default {
             // console.log(this.filter);
             // console.log(this.movementValue);
             // console.log(this.actionDatetime);
-            filteData(this.filter).then( res => {
-                this.eviLists = res.data //后端返回的数据
-                // console.log(this.eviLists);
-                this.total = res.count // 后端返回的总条数
-                // console.log(this.total);
-                    
-                // console.log(this.currentPage);
-                    // this.getinfoList()  //获取数据之后进行分页
-            });
-            
         
+            
+            filteData(this.filter).then( res => {
+                if(JSON.stringify(res) === '{}'){
+                        this.$alert('没有查找到相关数据', '警告', {
+                        confirmButtonText: '确定',
+                        });
+                    }
+                else{
+                    this.eviLists = res.data //后端返回的数据
+                // console.log(this.eviLists);
+                    this.total = res.count // 后端返回的总条数
+                // console.log(this.total);   
+                // console.log(this.currentPage);
+                // this.getinfoList()  //获取数据之后进行分页
+                }
+                
+            });
+            }
         },
     }
 }

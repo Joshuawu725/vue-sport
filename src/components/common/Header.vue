@@ -1,9 +1,8 @@
 <template>
     <div class="header">
         <!-- 折叠按钮 -->
-        <div class="collapse-btn" @click="collapseChage">
-            <i v-if="!collapse" class="el-icon-s-fold"></i>
-            <i v-else class="el-icon-s-unfold"></i>
+        <div class="collapse-btn">
+            <i class="el-icon-s-unfold"></i>
         </div>
         <div class="logo">乒乓球训练监控大数据挖掘与可视化</div>
         <div class="header-right">
@@ -74,10 +73,10 @@ export default {
             }
         },
         // 侧边栏折叠
-        collapseChage() {
-            this.collapse = !this.collapse;
-            bus.$emit('collapse', this.collapse);
-        },
+        // collapseChage() {
+        //     this.collapse = !this.collapse;
+        //     bus.$emit('collapse', this.collapse);
+        // },
         // 全屏事件
         handleFullScreen() {
             let element = document.documentElement;
@@ -107,9 +106,6 @@ export default {
         }
     },
     mounted() {
-        if (document.body.clientWidth < 1500) {
-            this.collapseChage();
-        }
     }
 };
 </script>

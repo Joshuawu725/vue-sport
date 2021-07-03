@@ -19,11 +19,7 @@ export default new Router({
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
                     meta: { title: '系统首页' }
                 },
-                // {
-                //     path: '/icon',
-                //     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
-                //     meta: { title: '自定义图标' }
-                // },
+                
                 // {
                 //     path: '/table',
                 //     component: () => import(/* webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
@@ -38,13 +34,18 @@ export default new Router({
                 {
                     path: '/tabs',
                     component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
-                    meta: { title: '相关性分析' }
+                    meta: { title: '击球力量与效果相关性分析' }
+                },
+                {
+                    path: '/icon',
+                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
+                    meta: { title: '动作特征与效果相关性' }
                 },
                 {
                     // vue-schart组件
                     path: '/charts',
                     component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
-                    meta: { title: '阶段对比' }
+                    meta: { title: '击球动作识别' }
                 },
                 {
                     path: '/donate',

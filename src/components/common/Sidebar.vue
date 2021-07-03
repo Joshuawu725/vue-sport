@@ -61,11 +61,6 @@ export default {
                     index: 'dashboard',
                     title: '系统首页'
                 },
-                // {
-                //     icon: 'el-icon-lx-cascades',
-                //     index: 'table',
-                //     title: '信息查询'
-                // },
                 {
                     icon: 'el-icon-lx-global',
                     index: 'i18n',
@@ -74,7 +69,12 @@ export default {
                 {
                     icon: 'el-icon-lx-copy',
                     index: 'tabs',
-                    title: '相关性分析'
+                    title: '击球力量与效果相关性'
+                },
+                {
+                    icon: 'el-icon-lx-emoji',
+                    index: 'icon',
+                    title: '动作特征与效果相关性'
                 },
                 {
                     icon: 'el-icon-lx-calendar',
@@ -84,7 +84,7 @@ export default {
                 {
                     icon: 'el-icon-pie-chart',
                     index: 'charts',
-                    title: '阶段对比'
+                    title: '击球动作类型识别'
                 },
                 // {
                 //     icon: 'el-icon-lx-calendar',
@@ -115,11 +115,7 @@ export default {
                 //         }
                 //     ]
                 // },
-                // {
-                //     icon: 'el-icon-lx-emoji',
-                //     index: 'icon',
-                //     title: '自定义图标'
-                // },
+                
                 // {
                 //     icon: 'el-icon-rank',
                 //     index: '6',

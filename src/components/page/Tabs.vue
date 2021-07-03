@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-copy">相关性分析</i>
+                    <i class="el-icon-lx-copy">击球力量与效果相关性</i>
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -90,89 +90,89 @@ import * as echarts from 'echarts';
                        value:"avz",
                        label:"avz",
                    },
-                   {
-                       value:"magnetismx",
-                       label:"magnetismx",
-                   },
-                   {
-                       value:"magnetismy",
-                       label:"magnetismy",
-                   },
-                   {
-                       value:"magnetismz",
-                       label:"magnetismz",
-                   },
-                   {
-                       value:"temperature",
-                       label:"temperature",
-                   },
-                   {
-                       value:"spin",
-                       label:"spin",
-                   },
-                   {
-                       value:"speed",
-                       label:"speed",
-                   },
-                   {
-                       value:"point",
-                       label:"point",
-                   }
+                //    {
+                //        value:"magnetismx",
+                //        label:"magnetismx",
+                //    },
+                //    {
+                //        value:"magnetismy",
+                //        label:"magnetismy",
+                //    },
+                //    {
+                //        value:"magnetismz",
+                //        label:"magnetismz",
+                //    },
+                //    {
+                //        value:"temperature",
+                //        label:"temperature",
+                //    },
+                //    {
+                //        value:"spin",
+                //        label:"spin",
+                //    },
+                //    {
+                //        value:"speed",
+                //        label:"speed",
+                //    },
+                //    {
+                //        value:"point",
+                //        label:"point",
+                //    }
                ],
                compareValueY:'',
                compareOptionY:[
-                   {
-                        value:"ax",
-                        label:"ax",
-                   },
-                   {
-                       value:"ay",
-                       label:"ay",
-                   },
-                   {
-                       value:"az",
-                       label:"az",
-                   },
-                   {
-                       value:"anglex",
-                       label:"anglex",
-                   },
-                   {
-                       value:"angley",
-                       label:"angley",
-                   },
-                   {
-                       value:"anglez",
-                       label:"anglez",
-                   },
-                   {
-                       value:"avx",
-                       label:"avx",
-                   },
-                   {
-                       value:"avy",
-                       label:"avy",
-                   },
-                   {
-                       value:"avz",
-                       label:"avz",
-                   },
-                   {
-                       value:"magnetismx",
-                       label:"magnetismx",
-                   },
-                   {
-                       value:"magnetismy",
-                       label:"magnetismy",
-                   },
-                   {
-                       value:"magnetismz",
-                       label:"magnetismz",
-                   },
-                   {
-                       value:"temperature",
-                       label:"temperature",
-                   },
+                //    {
+                //         value:"ax",
+                //         label:"ax",
+                //    },
+                //    {
+                //        value:"ay",
+                //        label:"ay",
+                //    },
+                //    {
+                //        value:"az",
+                //        label:"az",
+                //    },
+                //    {
+                //        value:"anglex",
+                //        label:"anglex",
+                //    },
+                //    {
+                //        value:"angley",
+                //        label:"angley",
+                //    },
+                //    {
+                //        value:"anglez",
+                //        label:"anglez",
+                //    },
+                //    {
+                //        value:"avx",
+                //        label:"avx",
+                //    },
+                //    {
+                //        value:"avy",
+                //        label:"avy",
+                //    },
+                //    {
+                //        value:"avz",
+                //        label:"avz",
+                //    },
+                //    {
+                //        value:"magnetismx",
+                //        label:"magnetismx",
+                //    },
+                //    {
+                //        value:"magnetismy",
+                //        label:"magnetismy",
+                //    },
+                //    {
+                //        value:"magnetismz",
+                //        label:"magnetismz",
+                //    },
+                //    {
+                //        value:"temperature",
+                //        label:"temperature",
+                //    },
                    {
                        value:"spin",
                        label:"spin",
@@ -195,20 +195,27 @@ import * as echarts from 'echarts';
         },
         methods: {
             showCompare(){
-               this.filteComparevalue = {
-                   xlist: this.compareValueX.join(","),
-                   ylist: this.compareValueY.join(",")
-               }
-               console.log(this.filteComparevalue);
-               console.log(JSON.stringify(this.filteComparevalue));
-               filteComparevalue(this.filteComparevalue).then(res => {
-                   this.filteCompareData = res;
-                   console.log(this.filteCompareData);
-                   this.xlist = this.filteCompareData.xlist;
-                   this.ylist = this.filteCompareData.y_list;
-                   this.values = this.filteCompareData.values;
-                   this.darwChart();
-               });
+                if(this.compareValueX == null || this.compareValueX == ''|| this.compareValueY == null || this.compareValueY == ''){
+                this.$alert('请选择完整的过滤选项', '警告', {
+                confirmButtonText: '确定',
+                });
+                }
+                else{
+                    this.filteComparevalue = {
+                    xlist: this.compareValueX.join(","),
+                    ylist: this.compareValueY.join(",")
+                    }
+                    console.log(this.filteComparevalue);
+                    console.log(JSON.stringify(this.filteComparevalue));
+                    filteComparevalue(this.filteComparevalue).then(res => {
+                    this.filteCompareData = res;
+                    console.log(this.filteCompareData);
+                    this.xlist = this.filteCompareData.xlist;
+                    this.ylist = this.filteCompareData.y_list;
+                    this.values = this.filteCompareData.values;
+                    this.darwChart();
+                    });
+                }
             },
             darwChart(){
                 var chartDom = document.getElementById('echart_heatpoint');

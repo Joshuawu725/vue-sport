@@ -3,7 +3,8 @@ import axios from 'axios';
 const service = axios.create({
     // process.env.NODE_ENV === 'development' 来判断是否开发环境
     // easy-mock服务挂了，暂时不使用了
-    baseURL: 'http://106.14.115.123:8080',
+    // baseURL: 'http://106.14.115.123:8080',
+    baseURL: 'http://127.0.0.1:8000',
     timeout: 5000
 });
 

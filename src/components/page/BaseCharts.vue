@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-pie-chart"></i> 阶段对比
+                    <i class="el-icon-pie-chart"></i> 击球动作类型识别
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -159,121 +159,134 @@ export default {
                     // console.log(item);
                     this.athleteListOption.push(item)
                 }
-                console.log(this.athleteListOption);
+                // console.log(this.athleteListOption);
             });
         },
         showFilter(){
             // this.jointValue = rightshoulder_pos_x
             //测试数据
             // this.getPhases = {
-            //     athlete_id: 'G003',//this.athleteListvalue
+            //     athlete_id: 'S012',//this.athleteListvalue
             //     start_time: '1609938070000',// this.actionDatetime[0]
             //     end_time: '1610110870000',// this.actionDatetime[-1]
             //     //chosen_y: this.jointValue,
             //     chosen_y: 'rightshoulder_pos_x',
             // };
             //正常使用
+            if(this.athleteListvalue == null || this.athleteListvalue == ''|| this.jointValue == null || this.jointValue == '' || this.actionDatetime.length != 2 || this.actionDatetime == '' || this.actionDatetime == null){
+                this.$alert('请选择完整的过滤选项', '警告', {
+                confirmButtonText: '确定',
+                });
+            }else{
             this.getPhases = {
                 athlete_id: this.athleteListvalue,//
                 start_time: this.actionDatetime[0],//
-                end_time: this.actionDatetime[-1],// 
+                end_time: this.actionDatetime[1],// 
                 //chosen_y: ,
                 chosen_y: this.jointValue,
             };
+            // console.log(this.getPhases);
             fetchPhases(this.getPhases).then( res =>{
-                this.resdata = res
-                // console.log(JSON.stringify(this.resdata));
-                // console.log(JSON.stringify(this.resdata[0]));
-                //取得每个series代表的一个动作的动作名+颜色
-                for(var i in this.resdata){
-                    // console.log(JSON.stringify(this.resdata[i]));
-                    //action(series)名称
-                    var actionName='';
-                    //action(series)颜色
-                    var actionColor='';
-                    //action(series)分阶段竖线
-                    var seriesMarkLine=[];
-                    //action(series)数据
-                    var seriesData=[];
-                    actionName = this.resdata[i].action
-                    actionColor = this.resdata[i].period[0].color
-                    // console.log(JSON.stringify(this.actionName));
-                    // console.log(JSON.stringify(this.actionColor));
-                    // console.log(JSON.stringify(this.resdata[0].period));
-                    //取每个series里代表阶段分界线的markline
-                    for(var item_period in this.resdata[i].period){
-                        // console.log(JSON.stringify(item_period));
-                        // console.log(JSON.stringify(this.resdata[0].period[item_period].start));
-                        // for (var item_)
-                        // console.log(JSON.stringify(this.resdata[0].period.item[start]));
-                        var start = '';
-                        var end = '';
-                        var marklineItem_1 = {};
-                        var marklineItem_2 = {};
-                        start = this.resdata[i].period[item_period].start
-                        // console.log(JSON.stringify(start));
-                        end = this.resdata[i].period[item_period].end
-                        marklineItem_1 = {
-                            "xAxis": start
-                        }
-                        // console.log(JSON.stringify(marklineItem_1));
-                        marklineItem_2 = {
-                            "xAxis": end
-                        }
-                        seriesMarkLine.push(marklineItem_1)
-                        seriesMarkLine.push(marklineItem_2)
-                    }
-                    // console.log(JSON.stringify(this.seriesMarkLine));
-                    // console.log(JSON.stringify(this.resdata[0].data));
-                    for(var item_data in this.resdata[i].data){
-                        // console.log(JSON.stringify(item_data));
-                        
-                        // console.log(JSON.stringify(this.resdata[0].data[item_data].rightshoulder_pos_x));
-                        // console.log(JSON.stringify(this.resdata[0].data[item_data].pk));
-                        var x = '';
-                        var y = '';
-                        var data = []
-                        x = this.resdata[i].data[item_data].pk
-                        y = this.resdata[i].data[item_data].chosen_y
-                        data[0] = x.toString()
-                        data[1] = y
-                        this.X_axis.push(x)
-                        // console.log(JSON.stringify(x));
-                        seriesData.push(data)
-                    }
-                    // console.log(JSON.stringify(this.seriesData));
-                    var item_serise = {   
-                        name: actionName,
-                        type: 'line',
-                        sampling: 'lttb',
-                        itemStyle: {
-                            color: actionColor
-                        },
-                        markLine: {
-                            symbol: ['none', 'none'],
-                            label: {show: false},
-                            data: seriesMarkLine
-                            },
-                        data: seriesData
-                    }
-                    // console.log(JSON.stringify(item_serise));
-                    // this.actionName
-                    // //action(series)颜色
-                    // this.actionColor
-                    // //action(series)分阶段竖线
-                    // this.seriesMarkLine:[],
-                    // //action(series)数据
-                    // this.seriesData:[],
-                    this.legendData.push(actionName)
-                    this.seriesDataAll.push(item_serise)
-                    console.log(JSON.stringify(seriesMarkLine));
+                if(JSON.stringify(res) === '{}'){
+                    this.$alert('没有查找到相关数据', '警告', {
+                    confirmButtonText: '确定',
+                    });
                 }
-                // console.log(JSON.stringify(this.X_axis));
-                // console.log(JSON.stringify(this.legendData));   
-                console.log(JSON.stringify(this.seriesDataAll));
-                this.darwChart();
+                else{
+                    this.resdata = res
+                    // console.log(JSON.stringify(this.resdata[0]));
+                    //取得每个series代表的一个动作的动作名+颜色
+                    for(var i in this.resdata){
+                        // console.log(JSON.stringify(this.resdata[i]));
+                        //action(series)名称
+                        var actionName='';
+                        //action(series)颜色
+                        var actionColor='';
+                        //action(series)分阶段竖线
+                        var seriesMarkLine=[];
+                        //action(series)数据
+                        var seriesData=[];
+                        actionName = this.resdata[i].action
+                        actionColor = this.resdata[i].period[0].color
+                        // console.log(JSON.stringify(this.actionName));
+                        // console.log(JSON.stringify(this.actionColor));
+                        // console.log(JSON.stringify(this.resdata[0].period));
+                        //取每个series里代表阶段分界线的markline
+                        for(var item_period in this.resdata[i].period){
+                            // console.log(JSON.stringify(item_period));
+                            // console.log(JSON.stringify(this.resdata[0].period[item_period].start));
+                            // for (var item_)
+                            // console.log(JSON.stringify(this.resdata[0].period.item[start]));
+                            var start = '';
+                            var end = '';
+                            var marklineItem_1 = {};
+                            var marklineItem_2 = {};
+                            start = this.resdata[i].period[item_period].start
+                            // console.log(JSON.stringify(start));
+                            end = this.resdata[i].period[item_period].end
+                            marklineItem_1 = {
+                                "xAxis": start
+                            }
+                            // console.log(JSON.stringify(marklineItem_1));
+                            marklineItem_2 = {
+                                "xAxis": end
+                            }
+                            seriesMarkLine.push(marklineItem_1)
+                            seriesMarkLine.push(marklineItem_2)
+                        }
+                        // console.log(JSON.stringify(this.seriesMarkLine));
+                        // console.log(JSON.stringify(this.resdata[0].data));
+                        for(var item_data in this.resdata[i].data){
+                            // console.log(JSON.stringify(item_data));
+                            
+                            // console.log(JSON.stringify(this.resdata[0].data[item_data].rightshoulder_pos_x));
+                            // console.log(JSON.stringify(this.resdata[0].data[item_data].pk));
+                            var x = '';
+                            var y = '';
+                            var data = []
+                            x = this.resdata[i].data[item_data].pk
+                            y = this.resdata[i].data[item_data].chosen_y
+                            data[0] = x.toString()
+                            data[1] = y
+                            this.X_axis.push(x)
+                            // console.log(JSON.stringify(x));
+                            seriesData.push(data)
+                        }
+                        // console.log(JSON.stringify(this.seriesData));
+                        var item_serise = {   
+                            name: actionName,
+                            type: 'line',
+                            sampling: 'lttb',
+                            itemStyle: {
+                                color: actionColor
+                            },
+                            markLine: {
+                                symbol: ['none', 'none'],
+                                label: {show: false},
+                                data: seriesMarkLine
+                                },
+                            data: seriesData
+                        }
+                        // console.log(JSON.stringify(item_serise));
+                        // this.actionName
+                        // //action(series)颜色
+                        // this.actionColor
+                        // //action(series)分阶段竖线
+                        // this.seriesMarkLine:[],
+                        // //action(series)数据
+                        // this.seriesData:[],
+                        this.legendData.push(actionName)
+                        this.seriesDataAll.push(item_serise)
+                        console.log(JSON.stringify(seriesMarkLine));
+                    }
+                    // console.log(JSON.stringify(this.X_axis));
+                    // console.log(JSON.stringify(this.legendData));   
+                    console.log(JSON.stringify(this.seriesDataAll));
+                    this.darwChart();
+                }
+                
             });
-            
+            }
         },
         darwChart(){
             // console.log(JSON.stringify(this.athletenameList));
